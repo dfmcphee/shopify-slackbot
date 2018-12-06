@@ -18,6 +18,29 @@ const handle = app.getRequestHandler();
 dotenv.config();
 const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY, SHOP_DOMAIN, SLACK_TOKEN, PRIVATE_API_KEY, PRIVATE_API_SECRET_KEY, } = process.env;
 
+function unfurlCustomer(customer, url) {
+  const customerMsg = {};
+  customerMsg[url] = {
+    "fallback": `${customer.first_name} + ${customer.last_name}`,
+    "title": `${customer.first_name} + ${customer.last_name}`,
+    "author_name": customer.email,
+    "author_icon": "https://proxy.shopifycdn.com/ec9137b7fa0e76de6e61c1892d85cc8e507c436f09fefb476c86a4ad0be697a1/www.gravatar.com/avatar/30a793187e90df78f4fa694dcfc3e5c9.jpg?s=80&d=https%3A%2F%2Fcdn.shopify.com%2Fs%2Fassets%2Fadmin%2Fcustomers%2Fpolaris%2Favatar-2-64bc87d27364ba40efe3c3d7f6450d7b739bd173602b50330fadb9f198b79789_80x80.png",
+    "title_link": url,
+    "fields": [
+    ],
+    "actions": [
+      {
+        "type": "button",
+        "text": "View customer",
+        "url": url
+      }
+    ],
+    "footer": "Store Name"
+  };
+
+  return customerMsg;
+}
+
 function unfurlProduct(product, url) {
   const productMsg = {};
   productMsg[url] = {
@@ -192,6 +215,8 @@ async function unfurlURL(event, token) {
     message = unfurlProduct(json.product, itemUrl);
   } else if (path.includes("orders")) {
     message = unfurlOrder(json.order, itemUrl);
+  } else if (path.includes("customers")) {
+    message = unfurlCustomer(json.customer, itemUrl);
   }
   
   const postData = JSON.stringify({
