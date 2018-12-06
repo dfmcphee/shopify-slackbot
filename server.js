@@ -35,13 +35,13 @@ async function unfurlURL(event, token) {
       "title_link": "https://api.slack.com/",
       "fields": [
           {
-              "title": "Total",
-              "value": "$100.23",
+              "title": "Product type",
+              "value": json.product.product_type,
               "short": true
           },
           {
-              "title": "Items",
-              "value": "4",
+              "title": "Vendor",
+              "value": json.product.vendor,
               "short": true
           }
       ],
@@ -54,11 +54,11 @@ async function unfurlURL(event, token) {
           },
           {
               "type": "button",
-              "text": "View order",
-              "url": "https://requests.example.com/cancel/r123456"
+              "text": "View product",
+              "url": event.links[0].url
           }
       ],
-      "image_url": "http://my-website.com/path/to/image.jpg",
+      "image_url": json.product.image.src,
       "thumb_url": "http://example.com/path/to/thumb.png",
       "footer": "Store Name"
     };
